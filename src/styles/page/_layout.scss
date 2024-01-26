@@ -1,0 +1,127 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body * {
+  box-sizing: border-box;
+}
+
+#container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background: #000;
+  color: #fff;
+  padding: 5px 20px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.625;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  background: #000;
+  color: #fff;
+  padding: 2px 20px;
+  text-align: right;
+  font-size: 14px;
+  line-height: 1.625;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+
+  a {
+    color: #fff;
+  }
+}
+
+#loading {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 9999;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+  font-size: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+#nodata {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 9999;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f00;
+  font-size: 30px;
+  display: none; // flex
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.ua-icon {
+  border: 2px solid #2626dd;
+  border-radius: 10px;
+}
+
+.ru-icon {
+  border: 2px solid #a00;
+  border-radius: 10px;
+}
+
+.ru-geoloc {
+  // Stroke properties
+  // color: '#fff',
+  // opacity: 1,
+  // weight: 2,
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-opacity: 1;
+
+  // // Fill properties
+  // fillColor: '#a00',
+  // fillOpacity: 1,
+  // radius: 5
+  fill: #a00;
+  fill-opacity: 1;
+}
+
+.ua-geoloc {
+  // Stroke properties
+  // color: '#fff',
+  // opacity: 1,
+  // weight: 2,
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-opacity: 1;
+
+  // // Fill properties
+  // fillColor: '#a00',
+  // fillOpacity: 1,
+  // radius: 5
+  fill: #2626dd;
+  fill-opacity: 1;
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UAControlMap Viewer</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="loading">
+        <h3>Loading data...</h3>
+      </div>
+      <div id="nodata">
+        <h3>Error: no data...</h3>
+      </div>
+      <header>
+        <div class="title">UAControlMap Viewer</div>
+        <div id="search-container">
+          <span>Unit Search:</span>
+          <input type="search" name="search" id="search">
+        </div>
+      </header>
+      <div id="map">
+        <div id="timeline-controls-container">
+          <div id="timeline-controls">
+            <button class="timeline-player-btn" id="timeline-play" name="play"></button>
+            <button class="timeline-player-btn" id="timeline-pause" name="pause"></button>
+            <button class="timeline-player-btn" id="timeline-stop" name="stop"></button>
+            <button class="timeline-step-btn" id="timeline-first" name="first"></button>
+            <button class="timeline-step-btn" id="timeline-previous" name="previous"></button>
+            <input type="date" name="current" id="timeline-input">
+            <button class="timeline-step-btn" id="timeline-next" name="next"></button>
+            <button class="timeline-step-btn" id="timeline-last" name="last"></button>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <strong>Data source:</strong> <a href="http://uacontrolmap.com" target="_blank"
+          rel="noopener noreferrer">Ukraine Control Map</a> | Icons generated with <a
+          href="https://github.com/spatialillusions/milsymbol" rel="noopener noreferrer">Milsymbol</a>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+
+</html>

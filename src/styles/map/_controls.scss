@@ -1,0 +1,220 @@
+// toggle buttons
+
+@function svg-timeline($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg>');
+}
+@function svg-fortifications($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M32 32C14.3 32 0 46.3 0 64V448c0 17.7 14.3 32 32 32s32-14.3 32-32V266.3L149.2 96H64V64c0-17.7-14.3-32-32-32zM405.2 96H330.8l-5.4 10.7L234.8 288h74.3l5.4-10.7L405.2 96zM362.8 288h74.3l5.4-10.7L533.2 96H458.8l-5.4 10.7L362.8 288zM202.8 96l-5.4 10.7L106.8 288h74.3l5.4-10.7L277.2 96H202.8zm288 192H576V448c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v53.7L490.8 288z"/></svg>');
+}
+@function svg-dragonteeth($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="20" viewBox="0 0 640 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M352 124.5l-51.9-13c-6.5-1.6-11.3-7.1-12-13.8s2.8-13.1 8.7-16.1l40.8-20.4L294.4 28.8c-5.5-4.1-7.8-11.3-5.6-17.9S297.1 0 304 0H416h32 16c30.2 0 58.7 14.2 76.8 38.4l57.6 76.8c6.2 8.3 9.6 18.4 9.6 28.8c0 26.5-21.5 48-48 48H538.5c-17 0-33.3-6.7-45.3-18.7L480 160H448v21.5c0 24.8 12.8 47.9 33.8 61.1l106.6 66.6c32.1 20.1 51.6 55.2 51.6 93.1C640 462.9 590.9 512 530.2 512H496 432 32.3c-3.3 0-6.6-.4-9.6-1.4C13.5 507.8 6 501 2.4 492.1C1 488.7 .2 485.2 0 481.4c-.2-3.7 .3-7.3 1.3-10.7c2.8-9.2 9.6-16.7 18.6-20.4c3-1.2 6.2-2 9.5-2.2L433.3 412c8.3-.7 14.7-7.7 14.7-16.1c0-4.3-1.7-8.4-4.7-11.4l-44.4-44.4c-30-30-46.9-70.7-46.9-113.1V181.5v-57zM512 72.3c0-.1 0-.2 0-.3s0-.2 0-.3v.6zm-1.3 7.4L464.3 68.1c-.2 1.3-.3 2.6-.3 3.9c0 13.3 10.7 24 24 24c10.6 0 19.5-6.8 22.7-16.3zM130.9 116.5c16.3-14.5 40.4-16.2 58.5-4.1l130.6 87V227c0 32.8 8.4 64.8 24 93H112c-6.7 0-12.7-4.2-15-10.4s-.5-13.3 4.6-17.7L171 232.3 18.4 255.8c-7 1.1-13.9-2.6-16.9-9s-1.5-14.1 3.8-18.8L130.9 116.5z"/></svg>');
+}
+@function svg-units($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M265.2 192c25.4 0 49.8 7.1 70.8 19.9V512H144V337.7L90.4 428.3c-11.2 19-35.8 25.3-54.8 14.1s-25.3-35.8-14.1-54.8L97.7 258.8c24.5-41.4 69-66.8 117.1-66.8h50.4zM160 80a80 80 0 1 1 160 0A80 80 0 1 1 160 80zM448 0c8.8 0 16 7.2 16 16V132.3c9.6 5.5 16 15.9 16 27.7V269.3l16-5.3V208c0-8.8 7.2-16 16-16h16c8.8 0 16 7.2 16 16v84.5c0 6.9-4.4 13-10.9 15.2L480 325.3V352h48c8.8 0 16 7.2 16 16v16c0 8.8-7.2 16-16 16H484l23 92.1c2.5 10.1-5.1 19.9-15.5 19.9H432c-8.8 0-16-7.2-16-16V400H400c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32V160c0-11.8 6.4-22.2 16-27.7V32c-8.8 0-16-7.2-16-16s7.2-16 16-16h16 16z"/></svg>');
+}
+@function svg-geolocations($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>');
+}
+
+.toggle-button {
+  width: 48px;
+  height: 48px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.timeline-toggle-button {
+  background: #fff;
+  background-image: svg-timeline("aaaaaa");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+
+  &.active {
+    background-image: svg-timeline("000000");
+  }
+}
+.fortifications-toggle-button {
+  background: #fff;
+  background-image: svg-fortifications("aaaaaa");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+
+  &.active {
+    background-image: svg-fortifications("000000");
+  }
+}
+.dragonteeth-toggle-button {
+  background: #fff;
+  background-image: svg-dragonteeth("aaaaaa");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+
+  &.active {
+    background-image: svg-dragonteeth("000000");
+  }
+}
+.units-toggle-button {
+  background: #fff;
+  background-image: svg-units("aaaaaa");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+
+  &.active {
+    background-image: svg-units("000000");
+  }
+}
+.geolocations-toggle-button {
+  background: #fff;
+  background-image: svg-geolocations("aaaaaa");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+
+  &.active {
+    background-image: svg-geolocations("000000");
+  }
+}
+
+// timeline control
+
+@function svg-next($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="8" viewBox="0 0 256 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M246.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-9.2-9.2-22.9-11.9-34.9-6.9s-19.8 16.6-19.8 29.6l0 256c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l128-128z"/></svg>');
+}
+@function svg-previous($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="8" viewBox="0 0 256 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M9.4 278.6c-12.5-12.5-12.5-32.8 0-45.3l128-128c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 256c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-128-128z"/></svg>');
+}
+@function svg-first($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M267.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160L64 241V96c0-17.7-14.3-32-32-32S0 78.3 0 96V416c0 17.7 14.3 32 32 32s32-14.3 32-32V271l11.5 9.6 192 160z"/></svg>');
+}
+@function svg-last($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4l192 160L256 241V96c0-17.7 14.3-32 32-32s32 14.3 32 32V416c0 17.7-14.3 32-32 32s-32-14.3-32-32V271l-11.5 9.6-192 160z"/></svg>');
+}
+@function svg-play($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>');
+}
+@function svg-pause($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"/></svg>');
+}
+@function svg-stop($color) {
+  // prettier-ignore
+  @return url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="%23'+$color+'" d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z"/></svg>');
+}
+
+#timeline-controls-container {
+  margin: auto auto 10px auto;
+  padding: 10px;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  position: relative;
+
+  &.hide {
+    display: none;
+  }
+}
+
+#timeline-controls {
+  .timeline-player-btn,
+  .timeline-step-btn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    cursor: pointer;
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  #timeline-first {
+    background: #fff;
+    background-image: svg-first("999999");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    &:hover {
+      background-image: svg-first("000000");
+    }
+  }
+  #timeline-previous {
+    background: #fff;
+    background-image: svg-previous("999999");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    &:hover {
+      background-image: svg-previous("000000");
+    }
+  }
+  #timeline-next {
+    background: #fff;
+    background-image: svg-next("999999");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    &:hover {
+      background-image: svg-next("000000");
+    }
+  }
+  #timeline-last {
+    background: #fff;
+    background-image: svg-last("999999");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    &:hover {
+      background-image: svg-last("000000");
+    }
+  }
+  #timeline-play {
+    background: #fff;
+    background-image: svg-play("999999");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    &:hover {
+      background-image: svg-play("000000");
+    }
+  }
+  #timeline-pause {
+    background: #fff;
+    background-image: svg-pause("999999");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    &:hover {
+      background-image: svg-pause("000000");
+    }
+  }
+  #timeline-stop {
+    background: #fff;
+    background-image: svg-stop("999999");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    &:hover {
+      background-image: svg-stop("000000");
+    }
+  }
+}
+
+.hide {
+  display: none !important;
+}
