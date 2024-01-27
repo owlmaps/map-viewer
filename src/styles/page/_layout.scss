@@ -17,7 +17,7 @@ body * {
 header {
   background: #000;
   color: #fff;
-  padding: 5px 20px;
+  padding: 5px 10px;
   text-align: center;
   font-size: 14px;
   line-height: 1.625;
@@ -26,6 +26,9 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  .title {
+    font-weight: bold;
+  }
 }
 
 #map {

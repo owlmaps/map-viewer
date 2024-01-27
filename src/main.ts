@@ -221,7 +221,7 @@ class MapViewer {
   };
 
   addSearchInputListener = () => {
-    const search = document.getElementById('search');
+    const search = document.getElementById('search') as HTMLInputElement;
     let timeout: any = null;
     const cb = this.updateCurrentSearchString;
     search?.addEventListener('keyup', function (e: Event) {
@@ -239,6 +239,14 @@ class MapViewer {
         cb(el.value);
       }, 1000);
     });
+    // reset button
+    const searchReset = document.getElementById('search-reset') as HTMLButtonElement;
+    searchReset?.addEventListener('click', function() {
+      if (search !== null && search.value !== '') {
+        search.value = '';
+        cb('');
+      }
+    })
   };
 
   //=================================================

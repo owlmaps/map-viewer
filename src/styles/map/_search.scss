@@ -1,10 +1,19 @@
 #search-container {
   span {
     color: #fff;
+    font-weight: bold;
   }
   input {
     margin-left: 10px;
     border: none;
     padding: 2px 5px;
+    border-radius: 3px;
+  }
+  button {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    margin: 0 2px;
+    background: #a00;
+    color: #fff;
   }
 }
