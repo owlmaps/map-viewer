@@ -606,10 +606,14 @@ class MapViewer {
           layer.bindPopup(feature.properties.unitName);
         },
         pointToLayer: function (feature, latlng) {
-          const { unitSIDC } = feature.properties;
+          const { unitSIDC, unitSIDCText } = feature.properties;
           // TODO: if no amplifier, reduce size, as these are otherwise bigger than all the other icons
           const iconSize = (unitSIDC.charAt(9) === '0') ? 28 : 30
-          const symbol = new ms.Symbol(unitSIDC);
+          const sidcOptions: any = {};
+          if (unitSIDCText !== '') {
+            sidcOptions.specialHeadquarters = unitSIDCText
+          }
+          const symbol = new ms.Symbol(unitSIDC, sidcOptions);
           const unitIcon = new UnitIconBaseClass({
             iconUrl: symbol.toDataURL(),
             iconSize: [iconSize, iconSize],

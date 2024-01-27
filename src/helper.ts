@@ -56,6 +56,7 @@ export const prepareUnitData = (data: UnitData, unit_map: UnitMap) => {
       const unitCoordinates = unitData[1];
       let unitName = 'Unknown';
       let unitSIDC = '30000000000000000000'; // fallback
+      let unitSIDCText = '';
 
       if (unit_map.hasOwnProperty(unitId)) {
         const aUnitData = unit_map[unitId];
@@ -64,6 +65,9 @@ export const prepareUnitData = (data: UnitData, unit_map: UnitMap) => {
         }
         if (aUnitData.hasOwnProperty('sidc') && aUnitData.sidc !== undefined) {
           unitSIDC = aUnitData.sidc;
+        }
+        if (aUnitData.hasOwnProperty('sidc_custom_text') && aUnitData.sidc_custom_text !== undefined) {
+          unitSIDCText = aUnitData.sidc_custom_text;
         }
       }
       uaUnitFeatures.push({
@@ -77,6 +81,7 @@ export const prepareUnitData = (data: UnitData, unit_map: UnitMap) => {
           unitName: unitName,
           unitSide: 'ua',
           unitSIDC: unitSIDC,
+          unitSIDCText: unitSIDCText
         },
       });
     }
@@ -98,6 +103,7 @@ export const prepareUnitData = (data: UnitData, unit_map: UnitMap) => {
       const unitCoordinates = unitData[1];
       let unitName = 'Unknown';
       let unitSIDC = '30000000000000000000'; // fallback
+      let unitSIDCText = '';
 
       if (unit_map.hasOwnProperty(unitId)) {
         const aUnitData = unit_map[unitId];
@@ -107,6 +113,9 @@ export const prepareUnitData = (data: UnitData, unit_map: UnitMap) => {
         if (aUnitData.hasOwnProperty('sidc') && aUnitData.sidc !== undefined) {
           unitSIDC = aUnitData.sidc;
         }
+        if (aUnitData.hasOwnProperty('sidc_custom_text') && aUnitData.sidc_custom_text !== undefined) {
+          unitSIDCText = aUnitData.sidc_custom_text;
+        }        
       }
 
       ruUnitFeatures.push({
@@ -120,6 +129,7 @@ export const prepareUnitData = (data: UnitData, unit_map: UnitMap) => {
           unitName: unitName,
           unitSide: 'ru',
           unitSIDC: unitSIDC,
+          unitSIDCText: unitSIDCText
         },
       });
     }

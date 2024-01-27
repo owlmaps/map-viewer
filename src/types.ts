@@ -15,6 +15,7 @@ export type UnitMap = {
     n: string;
     s: string;
     sidc: string;
+    sidc_custom_text?: string
   };
 };
 
