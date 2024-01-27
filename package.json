@@ -17,8 +17,6 @@
   "dependencies": {
     "leaflet": "^1.9.4",
     "leaflet-contextmenu": "^1.4.0",
-    "leaflet-timedimension": "^1.1.1",
-    "leaflet.timeline": "^1.4.3",
     "milsymbol": "^2.2.0"
   }
 }
