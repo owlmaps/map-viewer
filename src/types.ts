@@ -120,6 +120,6 @@ export type LocCollection = {
   features: LocFeatures;
 };
 
-export type TimeLineDirections = 'first' | 'last' | 'previous' | 'next';
+export type TimeLineDirections = 'first' | 'last' | 'previous' | 'next' | 'previous-7' | 'next-7';
 
 export type Sides = 'ua' | 'ru';

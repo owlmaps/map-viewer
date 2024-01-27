@@ -127,9 +127,11 @@ class MapViewer {
   };
 
   setTimelineMinMax = () => {
-    const input = document.getElementById('timeline-input-cal');
-    input?.setAttribute('min', this.firstDateKey);
-    input?.setAttribute('max', this.lastDateKey);
+    const input = document.getElementById('timeline-input');
+    const min = helper.dateKey2dateString(this.firstDateKey);
+    const max = helper.dateKey2dateString(this.lastDateKey);
+    input?.setAttribute('min', min);
+    input?.setAttribute('max', max);
   };
 
   createUnitIconBaseClass = () => {
@@ -210,6 +212,8 @@ class MapViewer {
         el.addEventListener(eventType, (e) => this.handleControlButton(e));
       });
     }
+    const inputDate = document.querySelector('#timeline-input');
+    inputDate?.addEventListener('change', (e) => this.handleControlInput(e))
   };
 
   addZoomListener = () => {
@@ -361,7 +365,7 @@ class MapViewer {
   //=================================================
 
   updateCurrentSearchString = (searchString: string | number) => {
-    console.log('update search string with:', searchString);
+    // console.log('update search string with:', searchString);
     this.search = searchString.toString().toLowerCase();
     // triger search
     this.searchUnits();
@@ -423,6 +427,20 @@ class MapViewer {
       case 'last':
         newDateKey = dates[dates.length - 1];
         break;
+      case 'next-7':
+        if (currentIndex + 7 < dates.length) {
+          newDateKey = dates[currentIndex + 7];
+        } else {
+          newDateKey = dates[dates.length - 1];
+        }
+        break;
+      case 'previous-7':
+        if (currentIndex >= 7) {
+          newDateKey = dates[currentIndex - 7];
+        } else {
+          newDateKey = dates[0];
+        }
+        break;
     }
     return newDateKey;
   };
@@ -457,6 +475,23 @@ class MapViewer {
     el.disabled = false;
   };
 
+  handleControlInput = async (e: Event): Promise<void> => {
+    const el = e.currentTarget as HTMLInputElement;
+
+    if (el === null || this.baseData === null) {
+      return;
+    }
+    const newDate = el.value;
+    // convert input to our format
+    const newDateKey = newDate.replace(/-/g, '');
+
+    // set new date
+    this.currentDateKey = newDateKey;
+    // fetch new data
+    await this.fetchData();
+    // update all dynamic layers
+    this.updateDynamicLayers();
+  }
   //=================================================
   // Generate Static Layers (and add to map)
   //=================================================
