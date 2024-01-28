@@ -28,7 +28,7 @@ class MapViewer {
     dragon_teeth: boolean;
     timeline: boolean
   };
-  showLabels: boolean;
+  showUnitLabels: boolean;
   baseUnitIcon: any;
 
   constructor() {
@@ -53,7 +53,7 @@ class MapViewer {
       dragon_teeth: false,
       timeline: true
     };
-    this.showLabels = false;
+    this.showUnitLabels = false;
     this.baseUnitIcon = this.createUnitIconBaseClass();
   }
 
@@ -99,7 +99,7 @@ class MapViewer {
     this.addDragonTeethToggle();
     this.addUnitsToggle();
     this.addGeosToggle();
-    this.addGeosToggle();
+    this.addUnitLabelToggle();
 
     // fetch latest data
     await this.fetchData();
@@ -148,7 +148,7 @@ class MapViewer {
   };
 
   createUnitIcon = (unitProps: UnitProps) => {
-    const { iw, ih } = this.calculateIconSize(unitProps);
+    const { iw, ih, tooltipOffset } = this.calculateIconSizeAndTooltipOffset(unitProps);
 
     const { unitSIDC, unitSIDCText, unitSide } = unitProps;
     const sidcOptions: any = {};
@@ -157,7 +157,7 @@ class MapViewer {
     }
     const symbol = new ms.Symbol(unitSIDC, sidcOptions);
 
-    return new this.baseUnitIcon({
+    const icon = new this.baseUnitIcon({
       iconUrl: symbol.toDataURL(),
       iconSize: [iw, ih],
       popupAnchor: [0, (ih / 1.5) * -1],
@@ -167,9 +167,11 @@ class MapViewer {
       unitSIDCText: unitSIDCText
     });
 
+    return { icon, tooltipOffset }
+
   }
 
-  calculateIconSize = (unitProps: any) => {
+  calculateIconSizeAndTooltipOffset = (unitProps: any) => {
     // the size depends on multiple factors:
     // - zoom-level
     // - showLabels true/false
@@ -208,8 +210,18 @@ class MapViewer {
     const iw = zoomLevel * zoomLevelFactor * identityFactor * amplifierFactor;
     const ih = zoomLevel * zoomLevelFactor * identityFactor * amplifierFactor;
 
+    // tooltip offset
+    // depends on amplifier set and side
+    let offsetY = ih / 2; // fallback
+    if (unitSide === 'ua') {
+      offsetY = hasAmplifier ? (ih / 1.7) : (ih / 2.25);
+    } else if (unitSide === 'ru') {
+      offsetY = hasAmplifier ? (ih / 1.6) : (ih / 1.6);
+    }
+    const tooltipOffset: number[] = [0, offsetY];
+
     // return width & height
-    return { iw, ih }
+    return { iw, ih, tooltipOffset }
   }
 
   //=================================================
@@ -227,7 +239,7 @@ class MapViewer {
   addFortificationsToggle = () => {
     const fortificationsToggleButton = mapper.createToogleLayerButton(
       () => this.toggleFortificationsLayer(),
-      'Toggle fortifications',
+      'Toggle Fortifications',
       'fortifications-toggle-button',
       this.layer_status.fortifications
     );
@@ -237,7 +249,7 @@ class MapViewer {
   addDragonTeethToggle = () => {
     const dragonTeethToggleButton = mapper.createToogleLayerButton(
       () => this.toggleDragonTeethLayer(),
-      'Toggle dragon teeth',
+      'Toggle Dragon Teeth',
       'dragonteeth-toggle-button',
       this.layer_status.dragon_teeth
     );
@@ -247,7 +259,7 @@ class MapViewer {
   addUnitsToggle = () => {
     const unitsToggleButton = mapper.createToogleLayerButton(
       () => this.toggleUnitsLayer(),
-      'Toggle units',
+      'Toggle Units',
       'units-toggle-button',
       this.layer_status.units
     );
@@ -257,11 +269,21 @@ class MapViewer {
   addGeosToggle = () => {
     const geosToggleButton = mapper.createToogleLayerButton(
       () => this.toggleGeosLayer(),
-      'Toggle geolocations',
+      'Toggle Geolocations',
       'geolocations-toggle-button',
       this.layer_status.geos
     );
     geosToggleButton.addTo(this.map);
+  };
+
+  addUnitLabelToggle = () => {
+    const unitLabelsToggleButton = mapper.createToogleLayerButton(
+      () => this.toggleUnitLabels(),
+      'Toggle Unit Labels',
+      'unitlabels-toggle-button',
+      this.showUnitLabels
+    );
+    unitLabelsToggleButton.addTo(this.map);
   };
 
   //=================================================
@@ -390,6 +412,29 @@ class MapViewer {
   };
 
   //=================================================
+  // Toggle Unit Labels
+  //=================================================
+  toggleUnitLabels = () => {
+    this.showUnitLabels = !this.showUnitLabels;
+    const unitLabels = document.querySelectorAll('.unit-labels');
+    unitLabels.forEach((labelElem) => {
+      if (this.showUnitLabels) {
+        labelElem.classList.remove('hide-label');
+      } else {
+        labelElem.classList.add('hide-label');
+      }
+    });
+    const btn = document.querySelector('.unitlabels-toggle-button');
+    if (this.showUnitLabels) {
+        btn?.classList.remove('inactive');
+        btn?.classList.add('active');
+    } else {
+        btn?.classList.remove('active');
+        btn?.classList.add('inactive');
+    }
+  }
+
+  //=================================================
   // Toggle Timeline Layers Handler
   //=================================================
 
@@ -451,8 +496,10 @@ class MapViewer {
     this.layer_units.forEach((unitLayer) => {
       unitLayer.eachLayer((layer: any) => {
         const currentIcon = layer.getIcon();
-        const unitIcon = this.createUnitIcon(currentIcon.options);
-        layer.setIcon(unitIcon);
+        const currentTooltip = layer.getTooltip();
+        const { icon, tooltipOffset } = this.createUnitIcon(currentIcon.options);
+        currentTooltip.options.offset = tooltipOffset;
+        layer.setIcon(icon);
       });
     });
     // triger search again
@@ -658,9 +705,15 @@ class MapViewer {
           layer.bindPopup(feature.properties.unitName);
         },
         pointToLayer: (feature, latlng) => {
-          const unitIcon = this.createUnitIcon(feature.properties);
+          const { icon, tooltipOffset } = this.createUnitIcon(feature.properties);
+          const unitLabelClasses = this.showUnitLabels ? 'unit-labels' : 'unit-labels hide-label';
           return L.marker(latlng, {
-            icon: unitIcon,
+            icon: icon,
+          }).bindTooltip(feature.properties.unitName, {
+            permanent: true,
+            direction: 'bottom',
+            className: unitLabelClasses,
+            offset: tooltipOffset as L.PointTuple
           });
         },
       });
