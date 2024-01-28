@@ -84,18 +84,21 @@ export type FeatureTypes =
   | 'Feature'
   | 'FeatureCollection';
 
+export type UnitProps = {
+  unitId: number,
+  unitName: string,
+  unitSide: 'ua' | 'ru',
+  unitSIDC: string,
+  unitSIDCText: string
+}
+
 export type UnitFeature = {
   type: string;
   geometry: {
     type: string;
     coordinates: Coordinate;
   };
-  properties: {
-    time?: string;
-    times?: string[];
-    unitId?: number;
-    unitName?: string;
-  };
+  properties: UnitProps;
 };
 export type UnitFeatures = UnitFeature[];
 export type UnitsCollection = {

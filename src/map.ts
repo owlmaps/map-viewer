@@ -16,10 +16,9 @@ declare module 'leaflet' {
 }
 
 export const initBaseMap = () => {
-  // const { lat, lng, zoom } = props;
   const lat = 47.5;
   const lng = 36.0;
-  const zoom = 7;
+  const zoom = 7; // initial zoom level
 
   // map center
   const mapcenter: any = [lat, lng];
@@ -108,6 +107,7 @@ export const initBaseMap = () => {
     center: mapcenter,
     zoom: zoom,
     minZoom: 4,
+    maxZoom: 18,
     maxBounds: [
       [90, -180],
       [-90, 180],

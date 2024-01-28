@@ -4,7 +4,7 @@ import * as mapper from './map';
 import { fetchBaseData, fetchDateData } from './fetcher';
 import * as helper from './helper';
 import * as L from 'leaflet';
-import { BaseData, TimeLineDirections } from './types';
+import { BaseData, TimeLineDirections, UnitProps } from './types';
 
 class MapViewer {
   map: any;
@@ -21,7 +21,6 @@ class MapViewer {
   maxCacheSize: number;
   cache: Map<string, any>;
   search: string;
-  iconSizeZoomFactor: number;
   layer_status: {
     units: boolean;
     geos: boolean;
@@ -29,6 +28,8 @@ class MapViewer {
     dragon_teeth: boolean;
     timeline: boolean
   };
+  showLabels: boolean;
+  baseUnitIcon: any;
 
   constructor() {
     this.map = null;
@@ -45,7 +46,6 @@ class MapViewer {
     this.cache = new Map<string, any>();
     this.maxCacheSize = 10;
     this.search = '';
-    this.iconSizeZoomFactor = 3;
     this.layer_status = {
       units: true,
       geos: true,
@@ -53,6 +53,8 @@ class MapViewer {
       dragon_teeth: false,
       timeline: true
     };
+    this.showLabels = false;
+    this.baseUnitIcon = this.createUnitIconBaseClass();
   }
 
   run = async () => {
@@ -97,6 +99,7 @@ class MapViewer {
     this.addDragonTeethToggle();
     this.addUnitsToggle();
     this.addGeosToggle();
+    this.addGeosToggle();
 
     // fetch latest data
     await this.fetchData();
@@ -134,20 +137,80 @@ class MapViewer {
     input?.setAttribute('max', max);
   };
 
+  // create the basic unit Icon, which we extend later
+  // based on sidc, zoom ect.
   createUnitIconBaseClass = () => {
-    // icon size is based on zoom level
-    const zoomLevel = this.map.getZoom();
-    const iw = zoomLevel * 4;
-    const ih = zoomLevel * 4;
     return L.Icon.extend({
       options: {
         iconUrl: 'img/symbols/unknown.svg', // fallback icon
-        iconSize: [iw, ih],
-        iconAnchor: [iw, ih],
-        popupAnchor: [(iw / 2) * -1, (ih + 2) * -1],
       },
     });
   };
+
+  createUnitIcon = (unitProps: UnitProps) => {
+    const { iw, ih } = this.calculateIconSize(unitProps);
+
+    const { unitSIDC, unitSIDCText, unitSide } = unitProps;
+    const sidcOptions: any = {};
+    if (unitSIDCText !== '') {
+      sidcOptions.specialHeadquarters = unitSIDCText
+    }
+    const symbol = new ms.Symbol(unitSIDC, sidcOptions);
+
+    return new this.baseUnitIcon({
+      iconUrl: symbol.toDataURL(),
+      iconSize: [iw, ih],
+      popupAnchor: [0, (ih / 1.5) * -1],
+      className: 'unit-marker',
+      unitSIDC: unitSIDC,
+      unitSide: unitSide,
+      unitSIDCText: unitSIDCText
+    });
+
+  }
+
+  calculateIconSize = (unitProps: any) => {
+    // the size depends on multiple factors:
+    // - zoom-level
+    // - showLabels true/false
+    // - unit has amplifier or not
+    // - ua or ru unit (rectangular vs. square)
+    const zoomLevel = this.map.getZoom();
+    const { unitSIDC, unitSide } = unitProps;
+    const hasAmplifier = unitSIDC.charAt(9) !== '0';
+
+    // console.log(zoomLevel, this.showLabels, unitSIDC, unitSide, hasAmplifier)
+
+    // zoom factor
+    // also we want big enough icons on higher zoom
+    // and not so big ones in lower zoom
+    // map zoom level from low (4) to high (18)
+    let zoomLevelFactor = 3.5;
+    if (zoomLevel <= 7) {
+      zoomLevelFactor = 2.5;
+    } else if (zoomLevel <= 10) {
+      zoomLevelFactor = 3;
+    } else if (zoomLevel <= 14) {
+      zoomLevelFactor = 3.5;
+    }
+    // const zoomLevelFactor = zoomLevel <= 8 ? 3 : 3;
+    // side factor
+    // as ru units use square icons compared to rectangle for ua
+    // we need to increase the size a bit
+    const identityFactor = unitSide === 'ua' ? 1 : 1.3;
+    // amplifier factor
+    // if a unit has no amplifier, we need to decrease the size
+    // we also need to check the side, as this has also an effect here
+    // again the reactangle vs. square problem
+    const amplifierFactor = hasAmplifier ? 1 : unitSide === 'ua' ? 1 : 0.8;
+
+
+    const iw = zoomLevel * zoomLevelFactor * identityFactor * amplifierFactor;
+    const ih = zoomLevel * zoomLevelFactor * identityFactor * amplifierFactor;
+
+    // return width & height
+    return { iw, ih }
+  }
 
   //=================================================
   // Toggle Buttons Setup
@@ -384,21 +447,12 @@ class MapViewer {
   //=================================================
 
   onZoomEnd = () => {
-    const UnitIconBaseClass: any = this.createUnitIconBaseClass();
     // based on zoom, adjust unit icon size
     this.layer_units.forEach((unitLayer) => {
-      unitLayer.eachLayer(function (layer: any) {
+      unitLayer.eachLayer((layer: any) => {
         const currentIcon = layer.getIcon();
-        const { options } = currentIcon;
-        const { iconUrl, className } = options;
-        // const { unitSIDC } = layer.feature.properties;
-        // const factor = (unitSIDC.charAt(9) === '0') ? 3 : 4
-        // console.log(iconSize, factor)
-        const icon: any = new UnitIconBaseClass({
-          iconUrl: iconUrl,
-          className: className,
-        });
-        layer.setIcon(icon);
+        const unitIcon = this.createUnitIcon(currentIcon.options);
+        layer.setIcon(unitIcon);
       });
     });
     // triger search again
@@ -605,20 +659,8 @@ class MapViewer {
         onEachFeature: function (feature, layer) {
           layer.bindPopup(feature.properties.unitName);
         },
-        pointToLayer: function (feature, latlng) {
-          const { unitSIDC, unitSIDCText } = feature.properties;
-          // TODO: if no amplifier, reduce size, as these are otherwise bigger than all the other icons
-          const iconSize = (unitSIDC.charAt(9) === '0') ? 28 : 30
-          const sidcOptions: any = {};
-          if (unitSIDCText !== '') {
-            sidcOptions.specialHeadquarters = unitSIDCText
-          }
-          const symbol = new ms.Symbol(unitSIDC, sidcOptions);
-          const unitIcon = new UnitIconBaseClass({
-            iconUrl: symbol.toDataURL(),
-            iconSize: [iconSize, iconSize],
-            className: 'unit-marker',
-          });
+        pointToLayer: (feature, latlng) => {
+          const unitIcon = this.createUnitIcon(feature.properties);
           return L.marker(latlng, {
             icon: unitIcon,
           });
