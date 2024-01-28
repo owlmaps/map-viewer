@@ -646,8 +646,6 @@ class MapViewer {
       this.latestData['units'],
       this.baseData.unit_map
     );
-    // create default icon
-    const UnitIconBaseClass: any = this.createUnitIconBaseClass();
 
     // create new unit layers
     unitFeatures.forEach((unitFeature: any) => {
