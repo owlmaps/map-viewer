@@ -967,8 +967,12 @@ class MapViewer {
             .includes(current_search_string)
         ) {
           elem?.classList.add('hide');
+          const tooltipClass = elem.getAttribute('aria-describedby');
+          document.getElementById(tooltipClass)?.classList.add('hide');
         } else {
           elem?.classList.remove('hide');
+          const tooltipClass = elem.getAttribute('aria-describedby');
+          document.getElementById(tooltipClass)?.classList.remove('hide');          
         }
       });
     });
