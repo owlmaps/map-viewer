@@ -26,9 +26,9 @@ class MapViewer {
     geos: boolean;
     fortifications: boolean;
     dragon_teeth: boolean;
-    timeline: boolean
+    timeline: boolean;
   };
-  // showUnitLabels: boolean;
+  showUnitLabels: boolean;
   baseUnitIcon: any;
 
   constructor() {
@@ -51,9 +51,9 @@ class MapViewer {
       geos: true,
       fortifications: false,
       dragon_teeth: false,
-      timeline: true
+      timeline: true,
     };
-    // this.showUnitLabels = false;
+    this.showUnitLabels = false;
     this.baseUnitIcon = this.createUnitIconBaseClass();
   }
 
@@ -82,16 +82,9 @@ class MapViewer {
 
     // add listener
     this.addTimelineControlListener();
-    this.addZoomListener();
+    this.addMapZoomListener();
+    this.addMapMoveListener();
     this.addSearchInputListener();
-
-    // this.map.on('overlayadd', () => {
-    //   this.layer_geos.forEach((layer: any) => {
-    //     if (this.map.hasLayer(layer)) {
-    //       layer.bringToFront();
-    //     }
-    //   })
-    // });
 
     // add toggle buttons
     this.addTimelineControlToggle();
@@ -99,7 +92,7 @@ class MapViewer {
     this.addDragonTeethToggle();
     this.addUnitsToggle();
     this.addGeosToggle();
-    // this.addUnitLabelToggle();
+    this.addUnitLabelToggle();
 
     // fetch latest data
     await this.fetchData();
@@ -148,12 +141,13 @@ class MapViewer {
   };
 
   createUnitIcon = (unitProps: UnitProps) => {
-    const { iw, ih, tooltipOffset } = this.calculateIconSizeAndTooltipOffset(unitProps);
+    const { iw, ih, tooltipOffset } =
+      this.calculateIconSizeAndTooltipOffset(unitProps);
 
     const { unitSIDC, unitSIDCText, unitSide } = unitProps;
     const sidcOptions: any = {};
     if (unitSIDCText !== '') {
-      sidcOptions.specialHeadquarters = unitSIDCText
+      sidcOptions.specialHeadquarters = unitSIDCText;
     }
     const symbol = new ms.Symbol(unitSIDC, sidcOptions);
 
@@ -164,12 +158,11 @@ class MapViewer {
       className: 'unit-marker',
       unitSIDC: unitSIDC,
       unitSide: unitSide,
-      unitSIDCText: unitSIDCText
+      unitSIDCText: unitSIDCText,
     });
 
-    return { icon, tooltipOffset }
-
-  }
+    return { icon, tooltipOffset };
+  };
 
   calculateIconSizeAndTooltipOffset = (unitProps: any) => {
     // the size depends on multiple factors:
@@ -206,7 +199,6 @@ class MapViewer {
     // again the reactangle vs. square problem
     const amplifierFactor = hasAmplifier ? 1 : unitSide === 'ua' ? 1 : 0.8;
 
-
     const iw = zoomLevel * zoomLevelFactor * identityFactor * amplifierFactor;
     const ih = zoomLevel * zoomLevelFactor * identityFactor * amplifierFactor;
 
@@ -214,15 +206,15 @@ class MapViewer {
     // depends on amplifier set and side
     let offsetY = ih / 2; // fallback
     if (unitSide === 'ua') {
-      offsetY = hasAmplifier ? (ih / 1.7) : (ih / 2.25);
+      offsetY = hasAmplifier ? ih / 1.7 : ih / 2.25;
     } else if (unitSide === 'ru') {
-      offsetY = hasAmplifier ? (ih / 1.6) : (ih / 1.6);
+      offsetY = hasAmplifier ? ih / 1.6 : ih / 1.6;
     }
     const tooltipOffset: number[] = [0, offsetY];
 
     // return width & height
-    return { iw, ih, tooltipOffset }
-  }
+    return { iw, ih, tooltipOffset };
+  };
 
   //=================================================
   // Toggle Buttons Setup
@@ -276,15 +268,15 @@ class MapViewer {
     geosToggleButton.addTo(this.map);
   };
 
-  // addUnitLabelToggle = () => {
-  //   const unitLabelsToggleButton = mapper.createToogleLayerButton(
-  //     () => this.toggleUnitLabels(),
-  //     'Toggle Unit Labels',
-  //     'unitlabels-toggle-button',
-  //     this.showUnitLabels
-  //   );
-  //   unitLabelsToggleButton.addTo(this.map);
-  // };
+  addUnitLabelToggle = () => {
+    const unitLabelsToggleButton = mapper.createToogleLayerButton(
+      () => this.toggleUnitLabels(),
+      'Toggle Unit Labels',
+      'unitlabels-toggle-button',
+      this.showUnitLabels
+    );
+    unitLabelsToggleButton.addTo(this.map);
+  };
 
   //=================================================
   // Add Listener
@@ -298,11 +290,15 @@ class MapViewer {
       });
     }
     const inputDate = document.querySelector('#timeline-input');
-    inputDate?.addEventListener('change', (e) => this.handleControlInput(e))
+    inputDate?.addEventListener('change', (e) => this.handleControlInput(e));
   };
 
-  addZoomListener = () => {
+  addMapZoomListener = () => {
     this.map.on('zoomend', () => this.onZoomEnd());
+  };
+
+  addMapMoveListener = () => {
+    this.map.on('moveend', () => this.onMoveEnd());
   };
 
   addSearchInputListener = () => {
@@ -325,13 +321,15 @@ class MapViewer {
       }, 1000);
     });
     // reset button
-    const searchReset = document.getElementById('search-reset') as HTMLButtonElement;
-    searchReset?.addEventListener('click', function() {
+    const searchReset = document.getElementById(
+      'search-reset'
+    ) as HTMLButtonElement;
+    searchReset?.addEventListener('click', function () {
       if (search !== null && search.value !== '') {
         search.value = '';
         cb('');
       }
-    })
+    });
   };
 
   //=================================================
@@ -414,25 +412,82 @@ class MapViewer {
   //=================================================
   // Toggle Unit Labels
   //=================================================
-  // toggleUnitLabels = () => {
-  //   this.showUnitLabels = !this.showUnitLabels;
-  //   const unitLabels = document.querySelectorAll('.unit-labels');
-  //   unitLabels.forEach((labelElem) => {
-  //     if (this.showUnitLabels) {
-  //       labelElem.classList.remove('hide-label');
-  //     } else {
-  //       labelElem.classList.add('hide-label');
-  //     }
-  //   });
-  //   const btn = document.querySelector('.unitlabels-toggle-button');
-  //   if (this.showUnitLabels) {
-  //       btn?.classList.remove('inactive');
-  //       btn?.classList.add('active');
-  //   } else {
-  //       btn?.classList.remove('active');
-  //       btn?.classList.add('inactive');
-  //   }
-  // }
+  toggleUnitLabels = () => {
+    // new status
+    this.showUnitLabels = !this.showUnitLabels;
+
+    if (!this.showUnitLabels) {
+      // if disabled, unbind all tooltips
+      this.layer_units.forEach((unitLayer) => {
+        unitLayer.eachLayer((layer: any) => {
+          layer.unbindTooltip();
+        });
+      });
+    } else {
+      // if enabled, bind all tooltips
+      // const zoomLevel = this.map.getZoom();
+      // const showPermanent = zoomLevel > 11;
+      const showPermanent = false;
+      const tooltipOptions: any = {
+        permanent: showPermanent,
+        direction: 'bottom',
+        className: 'unit-labels',
+      };
+
+      // temp all, only on mouseover
+      this.layer_units.forEach((unitLayer) => {
+        unitLayer.eachLayer((layer: any) => {
+          const { properties } = layer.feature;
+          const { unitName, offset } = properties;
+          tooltipOptions.offset = offset;
+          // console.log('bindtooltip', tooltipOptions);
+          layer.bindTooltip(unitName, tooltipOptions);
+        });
+      });
+
+      // if (showPermanent) {
+      //   // TODO
+      //   // + get bound
+      //   // + unbind all tooltip sof markers outside the bound
+      //   // + bind permanent tooltip of markers within the bound
+      // } else {
+      //   this.layer_units.forEach((unitLayer) => {
+      //     unitLayer.eachLayer((layer: any) => {
+      //       const { properties } = layer.feature;
+      //       const { unitName, offset } = properties;
+      //       tooltipOptions.offset = offset;
+      //       console.log('bindtooltip', tooltipOptions);
+      //       layer.bindTooltip(unitName, tooltipOptions);
+      //     });
+      //   });
+      // }
+    }
+
+    // toggle button
+    const btn = document.querySelector('.unitlabels-toggle-button');
+    if (this.showUnitLabels) {
+      btn?.classList.remove('inactive');
+      btn?.classList.add('active');
+    } else {
+      btn?.classList.remove('active');
+      btn?.classList.add('inactive');
+    }
+
+    // const tooltipOptions = {
+    //   permanent: false,
+    //   direction: 'bottom',
+    //   // offset: tooltipOffset as L.PointTuple,
+    // };
+
+    // const unitLabels = document.querySelectorAll('.unit-labels');
+    // unitLabels.forEach((labelElem) => {
+    //   if (this.showUnitLabels) {
+    //     labelElem.classList.remove('hide-label');
+    //   } else {
+    //     labelElem.classList.add('hide-label');
+    //   }
+    // });
+  };
 
   //=================================================
   // Toggle Timeline Layers Handler
@@ -488,22 +543,48 @@ class MapViewer {
   };
 
   //=================================================
-  // Zoom Handler
+  // Zoom & Move Handler
   //=================================================
 
   onZoomEnd = () => {
+    // console.log('onzoomend');
     // based on zoom, adjust unit icon size
     this.layer_units.forEach((unitLayer) => {
       unitLayer.eachLayer((layer: any) => {
         const currentIcon = layer.getIcon();
         // const currentTooltip = layer.getTooltip();
-        const { icon } = this.createUnitIcon(currentIcon.options);
+        const { icon, tooltipOffset } = this.createUnitIcon(
+          currentIcon.options
+        );
         // currentTooltip.options.offset = tooltipOffset;
+        layer.feature.properties.offset = tooltipOffset;
         layer.setIcon(icon);
       });
     });
     // triger search again
     this.searchUnits();
+  };
+
+  onMoveEnd = () => {
+    // if showUnitLabels & zoom-level > 11
+    // TODO
+    // + get bound
+    // + unbind all tooltips of markers outside the bound
+    // + bind permanent tooltips of markers within the bound
+    // const bounds = this.map.getBounds().toBBoxString();
+    // console.log(bounds);
+    // based on zoom, adjust unit icon size
+    // this.layer_units.forEach((unitLayer) => {
+    //   unitLayer.eachLayer((layer: any) => {
+    //     const currentIcon = layer.getIcon();
+    //     // const currentTooltip = layer.getTooltip();
+    //     const { icon } = this.createUnitIcon(currentIcon.options);
+    //     // currentTooltip.options.offset = tooltipOffset;
+    //     layer.setIcon(icon);
+    //   });
+    // });
+    // // triger search again
+    // this.searchUnits();
   };
 
   //=================================================
@@ -600,7 +681,7 @@ class MapViewer {
     await this.fetchData();
     // update all dynamic layers
     this.updateDynamicLayers();
-  }
+  };
   //=================================================
   // Generate Static Layers (and add to map)
   //=================================================
@@ -705,17 +786,19 @@ class MapViewer {
           layer.bindPopup(feature.properties.unitName);
         },
         pointToLayer: (feature, latlng) => {
-          const { icon } = this.createUnitIcon(feature.properties);
-          // const unitLabelClasses = this.showUnitLabels ? 'unit-labels' : 'unit-labels hide-label';
-          // const unitLabelClasses = 'unit-labels';
+          const { icon, tooltipOffset } = this.createUnitIcon(
+            feature.properties
+          );
+          feature.properties.offset = tooltipOffset;
+
           return L.marker(latlng, {
             icon: icon,
           });
-          // .bindTooltip(feature.properties.unitName, {
-          //   permanent: true,
+          //   .bindTooltip(feature.properties.unitName, {
+          //   permanent: false,
           //   direction: 'bottom',
-          //   className: unitLabelClasses,
-          //   offset: tooltipOffset as L.PointTuple
+          //   // className: unitLabelClasses,
+          //   offset: tooltipOffset as L.PointTuple,
           // });
         },
       });
