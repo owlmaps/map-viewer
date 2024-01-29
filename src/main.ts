@@ -28,7 +28,7 @@ class MapViewer {
     dragon_teeth: boolean;
     timeline: boolean
   };
-  showUnitLabels: boolean;
+  // showUnitLabels: boolean;
   baseUnitIcon: any;
 
   constructor() {
@@ -53,7 +53,7 @@ class MapViewer {
       dragon_teeth: false,
       timeline: true
     };
-    this.showUnitLabels = false;
+    // this.showUnitLabels = false;
     this.baseUnitIcon = this.createUnitIconBaseClass();
   }
 
@@ -99,7 +99,7 @@ class MapViewer {
     this.addDragonTeethToggle();
     this.addUnitsToggle();
     this.addGeosToggle();
-    this.addUnitLabelToggle();
+    // this.addUnitLabelToggle();
 
     // fetch latest data
     await this.fetchData();
@@ -276,15 +276,15 @@ class MapViewer {
     geosToggleButton.addTo(this.map);
   };
 
-  addUnitLabelToggle = () => {
-    const unitLabelsToggleButton = mapper.createToogleLayerButton(
-      () => this.toggleUnitLabels(),
-      'Toggle Unit Labels',
-      'unitlabels-toggle-button',
-      this.showUnitLabels
-    );
-    unitLabelsToggleButton.addTo(this.map);
-  };
+  // addUnitLabelToggle = () => {
+  //   const unitLabelsToggleButton = mapper.createToogleLayerButton(
+  //     () => this.toggleUnitLabels(),
+  //     'Toggle Unit Labels',
+  //     'unitlabels-toggle-button',
+  //     this.showUnitLabels
+  //   );
+  //   unitLabelsToggleButton.addTo(this.map);
+  // };
 
   //=================================================
   // Add Listener
@@ -414,25 +414,25 @@ class MapViewer {
   //=================================================
   // Toggle Unit Labels
   //=================================================
-  toggleUnitLabels = () => {
-    this.showUnitLabels = !this.showUnitLabels;
-    const unitLabels = document.querySelectorAll('.unit-labels');
-    unitLabels.forEach((labelElem) => {
-      if (this.showUnitLabels) {
-        labelElem.classList.remove('hide-label');
-      } else {
-        labelElem.classList.add('hide-label');
-      }
-    });
-    const btn = document.querySelector('.unitlabels-toggle-button');
-    if (this.showUnitLabels) {
-        btn?.classList.remove('inactive');
-        btn?.classList.add('active');
-    } else {
-        btn?.classList.remove('active');
-        btn?.classList.add('inactive');
-    }
-  }
+  // toggleUnitLabels = () => {
+  //   this.showUnitLabels = !this.showUnitLabels;
+  //   const unitLabels = document.querySelectorAll('.unit-labels');
+  //   unitLabels.forEach((labelElem) => {
+  //     if (this.showUnitLabels) {
+  //       labelElem.classList.remove('hide-label');
+  //     } else {
+  //       labelElem.classList.add('hide-label');
+  //     }
+  //   });
+  //   const btn = document.querySelector('.unitlabels-toggle-button');
+  //   if (this.showUnitLabels) {
+  //       btn?.classList.remove('inactive');
+  //       btn?.classList.add('active');
+  //   } else {
+  //       btn?.classList.remove('active');
+  //       btn?.classList.add('inactive');
+  //   }
+  // }
 
   //=================================================
   // Toggle Timeline Layers Handler
@@ -705,16 +705,18 @@ class MapViewer {
           layer.bindPopup(feature.properties.unitName);
         },
         pointToLayer: (feature, latlng) => {
-          const { icon, tooltipOffset } = this.createUnitIcon(feature.properties);
-          const unitLabelClasses = this.showUnitLabels ? 'unit-labels' : 'unit-labels hide-label';
+          const { icon } = this.createUnitIcon(feature.properties);
+          // const unitLabelClasses = this.showUnitLabels ? 'unit-labels' : 'unit-labels hide-label';
+          // const unitLabelClasses = 'unit-labels';
           return L.marker(latlng, {
             icon: icon,
-          }).bindTooltip(feature.properties.unitName, {
-            permanent: true,
-            direction: 'bottom',
-            className: unitLabelClasses,
-            offset: tooltipOffset as L.PointTuple
           });
+          // .bindTooltip(feature.properties.unitName, {
+          //   permanent: true,
+          //   direction: 'bottom',
+          //   className: unitLabelClasses,
+          //   offset: tooltipOffset as L.PointTuple
+          // });
         },
       });
       newLayers.push(aLayer);
