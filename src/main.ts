@@ -562,6 +562,7 @@ class MapViewer {
           currentIcon.options
         );
         // currentTooltip.options.offset = tooltipOffset;
+        // console.log(tooltipOffset);
         layer.feature.properties.offset = tooltipOffset;
         layer.setIcon(icon);
       });
