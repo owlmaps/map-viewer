@@ -205,12 +205,16 @@ class MapViewer {
     // tooltip offset
     // depends on amplifier set and side
     let offsetY = ih / 2; // fallback
+    let offsetX = iw / 1.5;
     if (unitSide === 'ua') {
-      offsetY = hasAmplifier ? ih / 1.7 : ih / 2.25;
+      offsetX = iw / 1.5;
+      offsetY = hasAmplifier ? ih / 6 : 0;
     } else if (unitSide === 'ru') {
-      offsetY = hasAmplifier ? ih / 1.6 : ih / 1.6;
+      offsetX = hasAmplifier ? iw / 2 : iw / 1.5;
+      offsetY = hasAmplifier ? ih / 8 : 0;
     }
-    const tooltipOffset: number[] = [0, offsetY];
+    // const tooltipOffset: number[] = [0, offsetY];
+    const tooltipOffset: number[] = [offsetX, offsetY];
 
     // return width & height
     return { iw, ih, tooltipOffset };
@@ -430,7 +434,7 @@ class MapViewer {
       const showPermanent = false;
       const tooltipOptions: any = {
         permanent: showPermanent,
-        direction: 'bottom',
+        direction: 'auto',
         className: 'unit-labels',
       };
 
@@ -439,6 +443,7 @@ class MapViewer {
         unitLayer.eachLayer((layer: any) => {
           const { properties } = layer.feature;
           const { unitName, offset } = properties;
+          // tooltipOptions.offset = offset;
           tooltipOptions.offset = offset;
           // console.log('bindtooltip', tooltipOptions);
           layer.bindTooltip(unitName, tooltipOptions);
