@@ -141,9 +141,7 @@ class MapViewer {
   };
 
   createUnitIcon = (unitProps: UnitProps) => {
-    const { iw, ih, tooltipOffset } =
-      this.calculateIconSizeAndTooltipOffset(unitProps);
-
+    const { iw, ih } = this.calculateIconSize(unitProps);
     const { unitSIDC, unitSIDCText, unitSide } = unitProps;
     const sidcOptions: any = {};
     if (unitSIDCText !== '') {
@@ -161,10 +159,44 @@ class MapViewer {
       unitSIDCText: unitSIDCText,
     });
 
-    return { icon, tooltipOffset };
+    return icon;
   };
 
-  calculateIconSizeAndTooltipOffset = (unitProps: any) => {
+  getTooltipOptions = (icon: any, latlng: any) => {
+    // extract some icon props
+    const { iconSize, unitSIDC, unitSide } = icon.options;
+    const iw = iconSize[0]
+    const ih = iconSize[1]
+    // get icon lat lng
+    // get map zoom & bound
+    const zoomLevel = this.map.getZoom();
+    const bounds = this.map.getBounds();
+    // set isPermanent
+    const isPermanent = zoomLevel >= 11 && bounds.contains(latlng);
+    // check amplifier
+    const hasAmplifier = unitSIDC.charAt(9) !== '0';
+    // offset defaults
+    let offsetX = 0;
+    let offsetY = 0;
+    // offsets depends on unitSide & amplifier
+    if (unitSide === 'ru') {
+      offsetX = hasAmplifier ? iw / 2 : iw / 1.5;
+      offsetY = hasAmplifier ? ih / 10 : 0;
+    } else if (unitSide === 'ua') {
+      offsetX = hasAmplifier ? iw / 1.5 : iw / 1.5;
+      offsetY = hasAmplifier ? ih / 10 : 0;
+    }
+    // final options
+    const tooltipOptions: any = {
+      permanent: isPermanent,
+      direction: 'auto',
+      className: 'unit-labels',
+      offset: [offsetX, offsetY]
+    };
+    return tooltipOptions
+  }
+
+  calculateIconSize = (unitProps: any) => {
     // the size depends on multiple factors:
     // - zoom-level
     // - showLabels true/false
@@ -275,7 +307,7 @@ class MapViewer {
   addUnitLabelToggle = () => {
     const unitLabelsToggleButton = mapper.createToogleLayerButton(
       () => this.toggleUnitLabels(),
-      'Toggle Unit Labels',
+      'Toggle Unit Labels on Mouseover or permanent (at zoomlevel >= 11)',
       'unitlabels-toggle-button',
       this.showUnitLabels
     );
@@ -416,56 +448,33 @@ class MapViewer {
   //=================================================
   // Toggle Unit Labels
   //=================================================
+  removeAllTooltips = () => {
+    this.layer_units.forEach((unitLayer) => {
+      unitLayer.eachLayer((layer: any) => {
+        layer.unbindTooltip();
+      });
+    });
+  }
+
+
   toggleUnitLabels = () => {
     // new status
     this.showUnitLabels = !this.showUnitLabels;
 
     if (!this.showUnitLabels) {
       // if disabled, unbind all tooltips
-      this.layer_units.forEach((unitLayer) => {
-        unitLayer.eachLayer((layer: any) => {
-          layer.unbindTooltip();
-        });
-      });
+      this.removeAllTooltips();
     } else {
       // if enabled, bind all tooltips
-      // const zoomLevel = this.map.getZoom();
-      // const showPermanent = zoomLevel > 11;
-      const showPermanent = false;
-      const tooltipOptions: any = {
-        permanent: showPermanent,
-        direction: 'auto',
-        className: 'unit-labels',
-      };
-
-      // temp all, only on mouseover
       this.layer_units.forEach((unitLayer) => {
         unitLayer.eachLayer((layer: any) => {
           const { properties } = layer.feature;
-          const { unitName, offset } = properties;
-          // tooltipOptions.offset = offset;
-          tooltipOptions.offset = offset;
-          // console.log('bindtooltip', tooltipOptions);
+          const { unitName } = properties;
+          const icon = layer.getIcon();
+          const tooltipOptions = this.getTooltipOptions(icon, layer.getLatLng())
           layer.bindTooltip(unitName, tooltipOptions);
         });
       });
-
-      // if (showPermanent) {
-      //   // TODO
-      //   // + get bound
-      //   // + unbind all tooltip sof markers outside the bound
-      //   // + bind permanent tooltip of markers within the bound
-      // } else {
-      //   this.layer_units.forEach((unitLayer) => {
-      //     unitLayer.eachLayer((layer: any) => {
-      //       const { properties } = layer.feature;
-      //       const { unitName, offset } = properties;
-      //       tooltipOptions.offset = offset;
-      //       console.log('bindtooltip', tooltipOptions);
-      //       layer.bindTooltip(unitName, tooltipOptions);
-      //     });
-      //   });
-      // }
     }
 
     // toggle button
@@ -552,19 +561,23 @@ class MapViewer {
   //=================================================
 
   onZoomEnd = () => {
-    // console.log('onzoomend');
+
+    // remove all tooltips
+    this.removeAllTooltips();
+
     // based on zoom, adjust unit icon size
     this.layer_units.forEach((unitLayer) => {
       unitLayer.eachLayer((layer: any) => {
         const currentIcon = layer.getIcon();
-        // const currentTooltip = layer.getTooltip();
-        const { icon, tooltipOffset } = this.createUnitIcon(
-          currentIcon.options
-        );
-        // currentTooltip.options.offset = tooltipOffset;
-        // console.log(tooltipOffset);
-        layer.feature.properties.offset = tooltipOffset;
+        const { unitName } = layer.feature.properties
+        // set icon
+        const icon = this.createUnitIcon(currentIcon.options);
         layer.setIcon(icon);
+        // if showUnitLabel: set label offset
+        if (this.showUnitLabels) {
+          const tooltipOptions = this.getTooltipOptions(icon, layer.getLatLng());
+          layer.bindTooltip(unitName, tooltipOptions);
+        }
       });
     });
     // triger search again
@@ -572,24 +585,23 @@ class MapViewer {
   };
 
   onMoveEnd = () => {
-    // if showUnitLabels & zoom-level > 11
-    // TODO
-    // + get bound
-    // + unbind all tooltips of markers outside the bound
-    // + bind permanent tooltips of markers within the bound
-    // const bounds = this.map.getBounds().toBBoxString();
-    // console.log(bounds);
-    // based on zoom, adjust unit icon size
-    // this.layer_units.forEach((unitLayer) => {
-    //   unitLayer.eachLayer((layer: any) => {
-    //     const currentIcon = layer.getIcon();
-    //     // const currentTooltip = layer.getTooltip();
-    //     const { icon } = this.createUnitIcon(currentIcon.options);
-    //     // currentTooltip.options.offset = tooltipOffset;
-    //     layer.setIcon(icon);
-    //   });
-    // });
-    // // triger search again
+
+    // remove all tooltips
+    this.removeAllTooltips();
+
+    // we don't need to create an icon, just change the labels
+    this.layer_units.forEach((unitLayer) => {
+      unitLayer.eachLayer((layer: any) => {
+        const currentIcon = layer.getIcon();
+        const { unitName } = layer.feature.properties
+        // if showUnitLabel: set label offset
+        if (this.showUnitLabels) {
+          const tooltipOptions = this.getTooltipOptions(currentIcon, layer.getLatLng());
+          layer.bindTooltip(unitName, tooltipOptions);
+        }
+      });
+    });
+    // triger search again
     // this.searchUnits();
   };
 
@@ -792,20 +804,20 @@ class MapViewer {
           layer.bindPopup(feature.properties.unitName);
         },
         pointToLayer: (feature, latlng) => {
-          const { icon, tooltipOffset } = this.createUnitIcon(
-            feature.properties
-          );
-          feature.properties.offset = tooltipOffset;
+          const icon = this.createUnitIcon(feature.properties);
 
+          // return marker with tooltip
+          if (this.showUnitLabels) {
+            const { unitName } = feature.properties;
+            const tooltipOptions = this.getTooltipOptions(icon, latlng);
+            return L.marker(latlng, {
+              icon: icon,
+            }).bindTooltip(unitName, tooltipOptions);
+          }
+          // or just the marker
           return L.marker(latlng, {
             icon: icon,
           });
-          //   .bindTooltip(feature.properties.unitName, {
-          //   permanent: false,
-          //   direction: 'bottom',
-          //   // className: unitLabelClasses,
-          //   offset: tooltipOffset as L.PointTuple,
-          // });
         },
       });
       newLayers.push(aLayer);
