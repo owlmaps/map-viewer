@@ -106,7 +106,7 @@ export const initBaseMap = () => {
 
   // create base map with OSM layer as default
   const map = L.map('map', {
-    layers: [osm],
+    layers: [cyclosm],
     center: mapcenter,
     zoom: zoom,
     minZoom: 4,
