@@ -496,9 +496,9 @@ class MapViewer {
     this.layer_units.forEach((unitLayer) => {
       unitLayer.eachLayer((layer: any) => {
         const currentIcon = layer.getIcon();
-        const currentTooltip = layer.getTooltip();
-        const { icon, tooltipOffset } = this.createUnitIcon(currentIcon.options);
-        currentTooltip.options.offset = tooltipOffset;
+        // const currentTooltip = layer.getTooltip();
+        const { icon } = this.createUnitIcon(currentIcon.options);
+        // currentTooltip.options.offset = tooltipOffset;
         layer.setIcon(icon);
       });
     });
