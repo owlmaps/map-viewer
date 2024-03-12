@@ -80,19 +80,57 @@ class MapViewer {
     // set date input to correct date
     this.updateDateInput();
 
-    // add listener
+    // add listeners
     this.addTimelineControlListener();
     this.addMapZoomListener();
     this.addMapMoveListener();
     this.addSearchInputListener();
 
+    // 
     // add toggle buttons
-    this.addTimelineControlToggle();
-    this.addFortificationsToggle();
-    this.addDragonTeethToggle();
-    this.addUnitsToggle();
-    this.addGeosToggle();
-    this.addUnitLabelToggle();
+    // 
+
+    this.addToggleButton(
+      this.toggleTimelineControl,
+      'Toggle Timeline Controls',
+      'timeline-toggle-button',
+      this.layer_status.timeline
+    );
+    
+    this.addToggleButton(
+      this.toggleFortificationsLayer,
+      'Toggle Fortifications',
+      'fortifications-toggle-button',
+      this.layer_status.fortifications
+    );
+    
+    this.addToggleButton(
+      this.toggleDragonTeethLayer,
+      'Toggle Dragon Teeth',
+      'dragonteeth-toggle-button',
+      this.layer_status.dragon_teeth
+    );
+    
+    this.addToggleButton(
+      this.toggleUnitsLayer,
+      'Toggle Units',
+      'units-toggle-button',
+      this.layer_status.units
+    );
+    
+    this.addToggleButton(
+      this.toggleGeosLayer,
+      'Toggle Geolocations',
+      'geolocations-toggle-button',
+      this.layer_status.geos
+    );
+    
+    this.addToggleButton(
+      this.toggleUnitLabels,
+      'Toggle Unit Labels permanently on (at zoomlevel >= 11)',
+      'unitlabels-toggle-button',
+      this.showPermanentUnitLabels
+    );
 
     // fetch latest data
     await this.fetchData();
@@ -259,62 +297,24 @@ class MapViewer {
   // Toggle Buttons Setup
   //=================================================
 
-  addTimelineControlToggle = () => {
-    const timelineToggleButton = mapper.createTimelineToggleButton(
-      () => this.toggleTimelineControl(),
-      this.layer_status.timeline
+  /**
+   * Creates a button for toggling map features.
+   * @param callbackFn The callback function.
+   * @param title The button title.
+   * @param cls The button dom class.
+   * @param initialStatus The initial state of the button.
+   */
+  addToggleButton = (
+    callbackFn: Function,
+    title: string,
+    cls: string,
+    initialStatus: boolean
+  ) => {
+    const toggleButton = mapper.createToggleButton(
+      () => callbackFn(), title, cls, initialStatus
     );
-    timelineToggleButton.addTo(this.map);
-  };
 
-  addFortificationsToggle = () => {
-    const fortificationsToggleButton = mapper.createToggleLayerButton(
-      () => this.toggleFortificationsLayer(),
-      'Toggle Fortifications',
-      'fortifications-toggle-button',
-      this.layer_status.fortifications
-    );
-    fortificationsToggleButton.addTo(this.map);
-  };
-
-  addDragonTeethToggle = () => {
-    const dragonTeethToggleButton = mapper.createToggleLayerButton(
-      () => this.toggleDragonTeethLayer(),
-      'Toggle Dragon Teeth',
-      'dragonteeth-toggle-button',
-      this.layer_status.dragon_teeth
-    );
-    dragonTeethToggleButton.addTo(this.map);
-  };
-
-  addUnitsToggle = () => {
-    const unitsToggleButton = mapper.createToggleLayerButton(
-      () => this.toggleUnitsLayer(),
-      'Toggle Units',
-      'units-toggle-button',
-      this.layer_status.units
-    );
-    unitsToggleButton.addTo(this.map);
-  };
-
-  addGeosToggle = () => {
-    const geosToggleButton = mapper.createToggleLayerButton(
-      () => this.toggleGeosLayer(),
-      'Toggle Geolocations',
-      'geolocations-toggle-button',
-      this.layer_status.geos
-    );
-    geosToggleButton.addTo(this.map);
-  };
-
-  addUnitLabelToggle = () => {
-    const unitLabelsToggleButton = mapper.createToggleLayerButton(
-      () => this.toggleUnitLabels(),
-      'Toggle Unit Labels permanently on (at zoomlevel >= 11)',
-      'unitlabels-toggle-button',
-      this.showPermanentUnitLabels
-    );
-    unitLabelsToggleButton.addTo(this.map);
+    toggleButton.addTo(this.map);
   };
 
   //=================================================
@@ -773,6 +773,7 @@ class MapViewer {
   //---------------------------------------------------------
 
   createUnitLayers = () => {
+    /// BUG: Something might be broken here, related to issue #12.
     if (this.baseData === null) {
       return;
     }

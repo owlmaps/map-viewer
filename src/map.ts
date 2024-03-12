@@ -15,16 +15,13 @@ declare module 'leaflet' {
   }
 }
 
+/**
+ * Initializes the leaflet base map.
+ * @returns The leaflet map.
+ */
 export const initBaseMap = () => {
-  const lat = 47.5;
-  const lng = 36.0;
-  // const lat = 45.94153243267059; // dev
-  // const lng = 36.56250000000001; // dev
-  const zoom = 7; // initial zoom level
-  // const zoom = 10; // dev
-
-  // map center
-  const mapcenter: any = [lat, lng];
+  const initialZoom = 7;
+  const mapCenter: any = [47.5, 36.0];
 
   // OSM tile layer
   const cyclosmUrl =
@@ -107,8 +104,8 @@ export const initBaseMap = () => {
   // create base map with OSM layer as default
   const map = L.map('map', {
     layers: [cyclosm],
-    center: mapcenter,
-    zoom: zoom,
+    center: mapCenter,
+    zoom: initialZoom,
     minZoom: 4,
     maxZoom: 18,
     maxBounds: [
@@ -151,52 +148,32 @@ export const initBaseMap = () => {
   return map;
 };
 
-export const createTimelineToggleButton = (
-  cb: Function,
-  initialStatus: boolean
-) => {
-  // toggle button
-  const toggleButtonControl = L.Control.extend({
-    onAdd: function () {
-      const statusCls = initialStatus ? 'active' : 'inactive';
-      const button = L.DomUtil.create(
-        'button',
-        `toggle-button timeline-toggle-button ${statusCls}`
-      );
-      button.title = 'Toggle Timeline Controls';
-      L.DomEvent.disableClickPropagation(button);
-      L.DomEvent.on(button, 'click', function () {
-        cb();
-      });
-      return button;
-    },
-  });
-  const toggleButton = new toggleButtonControl({ position: 'topright' });
-  return toggleButton;
-};
-
-export const createToggleLayerButton = (
+export const createToggleButton = (
   callback: Function,
   title: string,
   cls: string,
   initialStatus: boolean
 ) => {
-  // toggle button
-  const toggleLayerButton = L.Control.extend({
-    onAdd: function () {
+  const toggleButtonControl = L.Control.extend({
+    onAdd: () => {
       const statusCls = initialStatus ? 'active' : 'inactive';
+      
       const button = L.DomUtil.create(
         'button',
         `toggle-button ${cls} ${statusCls}`
       );
+
       button.title = title;
       L.DomEvent.disableClickPropagation(button);
-      L.DomEvent.on(button, 'click', function () {
+      
+      L.DomEvent.on(button, 'click', () => {
         callback();
       });
+      
       return button;
-    },
+    }
   });
-  const toggleButton = new toggleLayerButton({ position: 'topright' });
+
+  const toggleButton = new toggleButtonControl({ position: 'topright' });
   return toggleButton;
 };
