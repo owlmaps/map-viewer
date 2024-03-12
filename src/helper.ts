@@ -1,4 +1,4 @@
-import { UnitData, UnitMap, GeosData } from './types';
+import { UnitData, UnitPosition, UnitMap, GeosData } from './types';
 
 export const dateKey2dateString = (dateKey: any): string => {
   const pattern = /(\d{4})(\d{2})(\d{2})/;
@@ -46,103 +46,85 @@ export const prepareGeosData = (data: GeosData) => {
 
 export const prepareUnitData = (data: UnitData, unit_map: UnitMap) => {
   const unitCollections: any = [];
-  const uaUnitFeatures: any = [];
-  const ruUnitFeatures: any = [];
-  // ua units
-  if (Array.isArray(data.ua) && data.ua.length > 0) {
-    for (let i = 0; i < data.ua.length; i++) {
-      const unitData = data.ua[i];
-      const unitId = unitData[0];
-      const unitCoordinates = unitData[1];
-      let unitName = 'Unknown';
-      let unitSIDC = '30000000000000000000'; // fallback
-      let unitSIDCText = '';
 
-      if (unit_map.hasOwnProperty(unitId)) {
-        const aUnitData = unit_map[unitId];
-        if (aUnitData.hasOwnProperty('n') && aUnitData.n !== undefined) {
-          unitName = aUnitData.n;
+  /**
+   * Helper function for populating `unitCollections` with features.
+   * @param units A list of units and their positions.
+   * @param unitSide Shorthand for the unit sides.
+   */
+  const _populateUnitFeatures = (
+    units: UnitPosition[],
+    unitSide: string
+  ) => {
+    const unitFeatures: any = [];
+
+    if (Array.isArray(units) && units.length > 0) {
+      for (let i = 0; i < units.length; i++) {
+        const unitData = units[i];
+        const unitId = unitData[0];
+        const unitCoordinates = unitData[1];
+        let unitName = 'Unknown';
+        let unitSIDC = '30000000000000000000'; // fallback
+        let unitSIDCText = '';
+
+        if (unit_map.hasOwnProperty(unitId)) {
+          const aUnitData = unit_map[unitId];
+
+          if (
+            aUnitData.hasOwnProperty('n') && 
+            aUnitData.n !== undefined
+          ) {
+            unitName = aUnitData.n;
+          }
+          
+          if (
+            aUnitData.hasOwnProperty('sidc') && 
+            aUnitData.sidc !== undefined
+          ) {
+            unitSIDC = aUnitData.sidc;
+          }
+          
+          if (
+            aUnitData.hasOwnProperty('sidc_custom_text') && 
+            aUnitData.sidc_custom_text !== undefined
+          ) {
+            unitSIDCText = aUnitData.sidc_custom_text;
+          }
         }
-        if (aUnitData.hasOwnProperty('sidc') && aUnitData.sidc !== undefined) {
-          unitSIDC = aUnitData.sidc;
-        }
-        if (aUnitData.hasOwnProperty('sidc_custom_text') && aUnitData.sidc_custom_text !== undefined) {
-          unitSIDCText = aUnitData.sidc_custom_text;
-        }
+
+        unitFeatures.push({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: unitCoordinates,
+          },
+          properties: {
+            unitId: unitId,
+            unitName: unitName,
+            unitSide: unitSide,
+            unitSIDC: unitSIDC,
+            unitSIDCText: unitSIDCText
+          },
+        });
       }
-      uaUnitFeatures.push({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: unitCoordinates,
-        },
-        properties: {
-          unitId: unitId,
-          unitName: unitName,
-          unitSide: 'ua',
-          unitSIDC: unitSIDC,
-          unitSIDCText: unitSIDCText
-        },
-      });
     }
-  }
-  if (uaUnitFeatures.length > 0) {
-    const uaFeatureCollection = {
-      type: 'FeatureCollection',
-      features: uaUnitFeatures,
-    };
-    unitCollections.push(uaFeatureCollection);
-  } else {
-    unitCollections.push(null);
-  }
-  // ru inits
-  if (Array.isArray(data.ru) && data.ru.length > 0) {
-    for (let i = 0; i < data.ru.length; i++) {
-      const unitData = data.ru[i];
-      const unitId = unitData[0];
-      const unitCoordinates = unitData[1];
-      let unitName = 'Unknown';
-      let unitSIDC = '30000000000000000000'; // fallback
-      let unitSIDCText = '';
 
-      if (unit_map.hasOwnProperty(unitId)) {
-        const aUnitData = unit_map[unitId];
-        if (aUnitData.hasOwnProperty('n') && aUnitData.n !== undefined) {
-          unitName = aUnitData.n;
-        }
-        if (aUnitData.hasOwnProperty('sidc') && aUnitData.sidc !== undefined) {
-          unitSIDC = aUnitData.sidc;
-        }
-        if (aUnitData.hasOwnProperty('sidc_custom_text') && aUnitData.sidc_custom_text !== undefined) {
-          unitSIDCText = aUnitData.sidc_custom_text;
-        }        
+    if (unitFeatures.length > 0) {
+      const featureCollection = {
+        type: 'FeatureCollection',
+        features: unitFeatures,
       }
 
-      ruUnitFeatures.push({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: unitCoordinates,
-        },
-        properties: {
-          unitId: unitId,
-          unitName: unitName,
-          unitSide: 'ru',
-          unitSIDC: unitSIDC,
-          unitSIDCText: unitSIDCText
-        },
-      });
+      unitCollections.push(featureCollection);
+    } else {
+      console.error('failed to create unit features!!!');
+      unitCollections.push(null);
     }
-  }
-  if (ruUnitFeatures.length > 0) {
-    const ruFeatureCollection = {
-      type: 'FeatureCollection',
-      features: ruUnitFeatures,
-    };
-    unitCollections.push(ruFeatureCollection);
-  } else {
-    unitCollections.push(null);
-  }
+  };
+
+  // Create unit features.
+  _populateUnitFeatures(data.ua, 'ua');
+  _populateUnitFeatures(data.ru, 'ru');
 
   return unitCollections;
 };
