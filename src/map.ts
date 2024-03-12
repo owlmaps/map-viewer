@@ -175,7 +175,7 @@ export const createTimelineToggleButton = (
   return toggleButton;
 };
 
-export const createToogleLayerButton = (
+export const createToggleLayerButton = (
   callback: Function,
   title: string,
   cls: string,

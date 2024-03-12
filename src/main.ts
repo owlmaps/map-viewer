@@ -268,7 +268,7 @@ class MapViewer {
   };
 
   addFortificationsToggle = () => {
-    const fortificationsToggleButton = mapper.createToogleLayerButton(
+    const fortificationsToggleButton = mapper.createToggleLayerButton(
       () => this.toggleFortificationsLayer(),
       'Toggle Fortifications',
       'fortifications-toggle-button',
@@ -278,7 +278,7 @@ class MapViewer {
   };
 
   addDragonTeethToggle = () => {
-    const dragonTeethToggleButton = mapper.createToogleLayerButton(
+    const dragonTeethToggleButton = mapper.createToggleLayerButton(
       () => this.toggleDragonTeethLayer(),
       'Toggle Dragon Teeth',
       'dragonteeth-toggle-button',
@@ -288,7 +288,7 @@ class MapViewer {
   };
 
   addUnitsToggle = () => {
-    const unitsToggleButton = mapper.createToogleLayerButton(
+    const unitsToggleButton = mapper.createToggleLayerButton(
       () => this.toggleUnitsLayer(),
       'Toggle Units',
       'units-toggle-button',
@@ -298,7 +298,7 @@ class MapViewer {
   };
 
   addGeosToggle = () => {
-    const geosToggleButton = mapper.createToogleLayerButton(
+    const geosToggleButton = mapper.createToggleLayerButton(
       () => this.toggleGeosLayer(),
       'Toggle Geolocations',
       'geolocations-toggle-button',
@@ -308,7 +308,7 @@ class MapViewer {
   };
 
   addUnitLabelToggle = () => {
-    const unitLabelsToggleButton = mapper.createToogleLayerButton(
+    const unitLabelsToggleButton = mapper.createToggleLayerButton(
       () => this.toggleUnitLabels(),
       'Toggle Unit Labels permanently on (at zoomlevel >= 11)',
       'unitlabels-toggle-button',
