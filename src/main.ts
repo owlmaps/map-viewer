@@ -495,7 +495,7 @@ class MapViewer {
   // Toggle Timeline Layers Handler
   //=================================================
 
-  toggleGeosLayer() {
+  toggleGeosLayer = () => {
     if (this.layer_geos === null) {
       return;
     }
@@ -515,7 +515,7 @@ class MapViewer {
     });
   }
 
-  toggleUnitsLayer() {
+  toggleUnitsLayer = () => {
     const btn = document.querySelector('.units-toggle-button');
     this.layer_units.forEach((layer) => {
       if (this.map.hasLayer(layer)) {
