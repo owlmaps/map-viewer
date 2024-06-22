@@ -129,6 +129,22 @@ export const initBaseMap = () => {
           map.panTo(e.latlng);
         },
       },
+      '-',
+      {
+        text: 'Go to Coords',
+        callback: (): void => {
+          const coordsString = prompt('Enter coordinates (format: lat, lng)');
+          if (coordsString && coordsString !== '' && coordsString.includes(',')) {
+            const coords = coordsString?.split(',')
+            const latlng = new L.LatLng(parseFloat(coords[0]), parseFloat(coords[1]));
+            map.panTo(latlng);
+            const marker = L.marker(latlng).addTo(map);
+            marker.on('click', () => {
+              map.removeLayer(marker);
+            })
+          }
+        }
+      }
     ],
   });
 
