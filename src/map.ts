@@ -80,12 +80,14 @@ export const initBaseMap = () => {
   });
 
   // RU tile Layer - https://qms.nextgis.com/geoservices/563/
+  // const ruUrl =
+    // 'http://88.99.52.155/cgi-bin/tapp/tilecache.py/1.0.0/topomapper_v2/{z}/{x}/{y}.jpg';
   const ruUrl =
-    'http://88.99.52.155/cgi-bin/tapp/tilecache.py/1.0.0/topomapper_v2/{z}/{x}/{y}.jpg';
-  const ruAttriib = 'Tiles &copy; ATLOGIS Geoinformatics oHG';
+    'https://proxy.nakarte.me/http/88.99.52.155/tmg/{z}/{x}/{y}';
+  const ruAttriib = '<a href="http://www.topomapper.com">Topomapper</a>';
   const ru = L.tileLayer(ruUrl, {
-    minZoom: 10,
-    maxZoom: 13,
+    // minZoom: 10,
+    maxZoom: 18,
     noWrap: true,
     name: 'ruarmy',
     attribution: ruAttriib,
