@@ -14,10 +14,11 @@ class MapViewer {
   baseData: BaseData;
   latestData: any;
   layer_frontline: any;
+  layer_frontline_areas: any;
   layer_fortifications: any;
   layer_dragon_teeth: any;
   layer_units: any[];
-  layer_geos: [];
+  layer_geos: any[];
   maxCacheSize: number;
   cache: Map<string, any>;
   search: string;
@@ -27,6 +28,7 @@ class MapViewer {
     fortifications: boolean;
     dragon_teeth: boolean;
     timeline: boolean;
+    areas: boolean;
   };
   showPermanentUnitLabels: boolean;
   baseUnitIcon: any;
@@ -39,6 +41,7 @@ class MapViewer {
     this.baseData = null;
     this.latestData = null;
     this.layer_frontline = null;
+    this.layer_frontline_areas = [];
     this.layer_fortifications = null;
     this.layer_dragon_teeth = null;
     this.layer_units = [];
@@ -52,6 +55,7 @@ class MapViewer {
       fortifications: false,
       dragon_teeth: false,
       timeline: true,
+      areas: true,
     };
     this.showPermanentUnitLabels = false;
     this.baseUnitIcon = this.createUnitIconBaseClass();
@@ -95,6 +99,13 @@ class MapViewer {
       'Toggle Timeline Controls',
       'timeline-toggle-button',
       this.layer_status.timeline
+    );
+
+    this.addToggleButton(
+      this.toggleAreasLayer,
+      'Toggle Areas',
+      'areas-toggle-button',
+      this.layer_status.areas
     );
     
     this.addToggleButton(
@@ -495,6 +506,24 @@ class MapViewer {
   // Toggle Timeline Layers Handler
   //=================================================
 
+  toggleAreasLayer = () => {
+    if (this.layer_fortifications === null) {
+      return;
+    }
+    const btn = document.querySelector('.areas-toggle-button');
+    if (this.map.hasLayer(this.layer_frontline_areas)) {
+      this.map.removeLayer(this.layer_frontline_areas);
+      btn?.classList.remove('active');
+      btn?.classList.add('inactive');
+      this.layer_status.areas = false;
+    } else {
+      this.map.addLayer(this.layer_frontline_areas);
+      btn?.classList.remove('inactive');
+      btn?.classList.add('active');
+      this.layer_status.areas = true;
+    }
+  };
+
   toggleGeosLayer = () => {
     if (this.layer_geos === null) {
       return;
@@ -770,6 +799,33 @@ class MapViewer {
     this.addFrontlineLayer();
   }
 
+  createFrontlineAreasLayer = () => {
+    const frontlineAreaOptions = {
+      weight: 0,
+      color: '#ff0000',
+      fillOpacity: 0.15,
+      interactive: false,
+    };
+    this.layer_frontline_areas = L.polygon(this.latestData['areas'], frontlineAreaOptions);
+
+  };
+
+  addFrontlineAreasLayer = () => {
+    this.layer_frontline_areas.addTo(this.map);
+  };
+
+  removeFrontlineAreasLayer = () => {
+    if (this.layer_frontline_areas !== null) {
+      this.map.removeLayer(this.layer_frontline_areas);
+    }
+  };
+
+  updateFrontlineAreasLayer() {
+    this.removeFrontlineAreasLayer();
+    this.createFrontlineAreasLayer();
+    this.addFrontlineAreasLayer();
+  }
+
   //---------------------------------------------------------
 
   createUnitLayers = () => {
@@ -906,6 +962,7 @@ class MapViewer {
   //=================================================
   updateDynamicLayers = () => {
     this.updateFrontlineLayer();
+    this.updateFrontlineAreasLayer();
     this.updateUnitsLayers();
     this.updateGeosLayers();
   };
