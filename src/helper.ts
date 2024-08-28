@@ -10,6 +10,16 @@ export const dateKey2dateString = (dateKey: any): string => {
   return dateString;
 };
 
+export const dateKey2dateString2 = (dateKey: any): string => {
+  const pattern = /(\d{4})(\d{2})(\d{2})/;
+  const match = pattern.exec(dateKey);
+  let dateString = 'xxxx-xx-xx'; // fallback
+  if (match !== null) {
+    dateString = `${match[3]}.${match[2]}.${match[1]}`;
+  }
+  return dateString;
+};
+
 export const prepareGeosData = (data: GeosData) => {
   const geosCollections: any = [];
   const uaGeosFeatures: any = [];

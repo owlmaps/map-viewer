@@ -1045,8 +1045,13 @@ class MapViewer {
     // update input date
     const dateControl: HTMLInputElement | null =
       document.querySelector('#timeline-input');
+    const dateDisplay: HTMLInputElement | null =
+    document.querySelector('#date-display');
     if (dateControl !== null) {
       dateControl.value = helper.dateKey2dateString(this.currentDateKey);
+    }
+    if (dateDisplay !== null) {
+      dateDisplay.innerHTML = helper.dateKey2dateString2(this.currentDateKey);
     }
   }
 }
