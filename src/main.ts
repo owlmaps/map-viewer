@@ -800,13 +800,31 @@ class MapViewer {
   }
 
   createFrontlineAreasLayer = () => {
+    const features = [];
     const frontlineAreaOptions = {
       weight: 0,
       color: '#ff0000',
       fillOpacity: 0.15,
       interactive: false,
     };
-    this.layer_frontline_areas = L.polygon(this.latestData['areas'], frontlineAreaOptions);
+    if ('areas' in this.latestData) {
+      const area = L.polygon(this.latestData['areas'], frontlineAreaOptions);
+      features.push(area);
+    }
+    const frontlineAreaOptions_ua = {
+      weight: 0,
+      color: '#FFBF00',
+      fillOpacity: 0.35,
+      interactive: false,
+    };
+    if ('areas_ua' in this.latestData) {
+      const area_ua = L.polygon(this.latestData['areas_ua'], frontlineAreaOptions_ua);
+      features.push(area_ua);
+    }
+    const group = L.featureGroup(features);
+
+    this.layer_frontline_areas = group;
+    // this.layer_frontline_areas = L.polygon(this.latestData['areas'], frontlineAreaOptions);
 
   };
 

@@ -130,7 +130,10 @@ export const prepareUnitData = (data: UnitData, unit_map: UnitMap) => {
 };
 
 const URL_PATTERN = /(((https?:\/\/)|(www\.))[^\s|<]+)/g;
-export const transformURLs = (aText: string) => {
+export const transformURLs = (aText: string | null) => {
+  if (aText === null) {
+    return '';
+  }
   return aText.replace(URL_PATTERN, (url) => {
     let href = url;
     if (!href.match('^https?://')) {
