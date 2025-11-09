@@ -93,7 +93,7 @@ export const initBaseMap = () => {
   // const ruUrl =
     // 'http://88.99.52.155/cgi-bin/tapp/tilecache.py/1.0.0/topomapper_v2/{z}/{x}/{y}.jpg';
   const ruUrl =
-    'https://proxy.nakarte.me/http/88.99.52.155/tmg/{z}/{x}/{y}';
+    'https://proxy.nakarte.me/http/88.99.52.156/tmg/{z}/{x}/{y}';
   const ruAttriib = '<a href="http://www.topomapper.com">Topomapper</a>';
   const ru = L.tileLayer(ruUrl, {
     // minZoom: 10,
