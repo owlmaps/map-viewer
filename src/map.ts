@@ -80,27 +80,6 @@ export const initBaseMap = () => {
   });
 
 
-  // Here tile Layer
-  const hereUrl =
-    'https://1.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/512/jpg?apiKey=aRrXMN6rNeDunujbIgCqESvkttKlk4Pp2j5N7xTp4Ek';
-  const here = L.tileLayer(hereUrl, {
-    maxZoom: 18,
-    noWrap: true,
-    name: 'here',
-  });
-
-  // const urlsBypassCORSProxy = [new RegExp('^https://pkk\\.rosreestr\\.ru/', 'u')];
-  // const CORSProxyUrl = 'https://proxy.nakarte.me/';
-  // function urlViaCorsProxy(url: string) {
-  //      for (let pattern of urlsBypassCORSProxy) {
-  //          if (pattern.test(url)) {
-  //              return url;
-  //          }
-  //      }
-  //      return CORSProxyUrl + url.replace(/^(https?):\/\//u, '$1/');
-  //  }
-
-
   // RU tile Layer - https://qms.nextgis.com/geoservices/563/
   // const ruUrl =
     // 'http://88.99.52.155/cgi-bin/tapp/tilecache.py/1.0.0/topomapper_v2/{z}/{x}/{y}.jpg';
@@ -124,7 +103,7 @@ export const initBaseMap = () => {
     EsriWorldMap: esri,
     CartoDB: carto,
     // RuArmy: ru,
-    Here: here,
+    // Here: here,
   };
 
   // create base map with OSM layer as default
