@@ -89,19 +89,32 @@ export const initBaseMap = () => {
     name: 'here',
   });
 
+  const urlsBypassCORSProxy = [new RegExp('^https://pkk\\.rosreestr\\.ru/', 'u')];
+  const CORSProxyUrl = 'https://proxy.nakarte.me/';
+  function urlViaCorsProxy(url: string) {
+       for (let pattern of urlsBypassCORSProxy) {
+           if (pattern.test(url)) {
+               return url;
+           }
+       }
+       return CORSProxyUrl + url.replace(/^(https?):\/\//u, '$1/');
+   }
+
+
   // RU tile Layer - https://qms.nextgis.com/geoservices/563/
   // const ruUrl =
     // 'http://88.99.52.155/cgi-bin/tapp/tilecache.py/1.0.0/topomapper_v2/{z}/{x}/{y}.jpg';
   // const ruUrl =
-    // 'https://proxy.nakarte.me/http/88.99.52.156/tmg/{z}/{x}/{y}';
-  // const ruAttriib = '<a href="http://www.topomapper.com">Topomapper</a>';
-  // const ru = L.tileLayer(ruUrl, {
-  //   // minZoom: 10,
-  //   maxZoom: 18,
-  //   noWrap: true,
-  //   name: 'ruarmy',
-  //   attribution: ruAttriib,
-  // });
+  //   'https://proxy.nakarte.me/http/88.99.52.156/tmg/{z}/{x}/{y}';
+
+  const ruAttriib = '<a href="http://www.topomapper.com">Topomapper</a>';
+  const ru = L.tileLayer(urlViaCorsProxy('http://88.99.52.156/tmg/{z}/{x}/{y}'), {
+    // minZoom: 10,
+    maxZoom: 18,
+    noWrap: true,
+    name: 'ruarmy',
+    attribution: ruAttriib,
+  });
 
   // set basemaps (from tile layers above)
   const baseMaps = {
@@ -110,7 +123,7 @@ export const initBaseMap = () => {
     OpenTopoMap: topo,
     EsriWorldMap: esri,
     CartoDB: carto,
-    // RuArmy: ru,
+    RuArmy: ru,
     Here: here,
   };
 
