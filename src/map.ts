@@ -92,8 +92,9 @@ export const initBaseMap = () => {
   // RU tile Layer - https://qms.nextgis.com/geoservices/563/
   // const ruUrl =
     // 'http://88.99.52.155/cgi-bin/tapp/tilecache.py/1.0.0/topomapper_v2/{z}/{x}/{y}.jpg';
-  const ruUrl =
-    'https://proxy.nakarte.me/http/88.99.52.156/tmg/{z}/{x}/{y}';
+  // const ruUrl =
+    // 'https://proxy.nakarte.me/http/88.99.52.156/tmg/{z}/{x}/{y}';
+  const ruUrl = 'https://nakarte.me/#m={z}/{x}/{y}&l=T';
   const ruAttriib = '<a href="http://www.topomapper.com">Topomapper</a>';
   const ru = L.tileLayer(ruUrl, {
     // minZoom: 10,
