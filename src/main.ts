@@ -1001,7 +1001,11 @@ class MapViewer {
     if (this.cache.has(this.currentDateKey)) {
       this.latestData = this.cache.get(this.currentDateKey);
     } else {
-      this.latestData = await fetchDateData(this.currentDateKey);
+      // try to fetch data, if nothing was found (404), use the latest data
+      const dayData = await fetchDateData(this.currentDateKey);
+      if (dayData !== null) {
+        this.latestData = dayData;
+      }
       this.cache.set(this.currentDateKey, this.latestData);
     }
     // check size of cache, remove items is needed
