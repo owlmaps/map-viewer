@@ -1025,6 +1025,7 @@ class MapViewer {
       if (dayData.units.ua.length === 0) {
         dayData.units.ua = this.latestData && 'units' in this.latestData ? this.latestData.units.ua : [];
       }
+      this.latestData = dayData;
 
       this.cache.set(this.currentDateKey, this.latestData);
     }
