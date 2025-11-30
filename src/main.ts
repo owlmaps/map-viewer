@@ -1003,9 +1003,32 @@ class MapViewer {
     } else {
       // try to fetch data, if nothing was found (404), use the latest data
       const dayData = await fetchDateData(this.currentDateKey);
-      if (dayData !== null) {
+      // replace missing data with the previious loaded data
+      if (dayData === null) {
         this.latestData = dayData;
       }
+      if (dayData.areas.length === 0) {
+        dayData.areas = this.latestData.areas;
+      }
+      if (dayData.areas_ua.length === 0) {
+        dayData.areas_ua = this.latestData.areas_ua;
+      }
+      if (dayData.frontline.length === 0) {
+        dayData.frontline = this.latestData.frontline;
+      }            
+      if (dayData.unit_count.ru.length === 0) {
+        dayData.unit_count.ru = this.latestData.unit_count.ru;
+      }
+      if (dayData.unit_count.ua.length === 0) {
+        dayData.unit_count.ua = this.latestData.unit_count.ua;
+      }
+      if (dayData.units.ru.length === 0) {
+        dayData.units.ru = this.latestData.units.ru;
+      }
+      if (dayData.units.ua.length === 0) {
+        dayData.units.ua = this.latestData.units.ua;
+      }
+
       this.cache.set(this.currentDateKey, this.latestData);
     }
     // check size of cache, remove items is needed
