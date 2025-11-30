@@ -1004,9 +1004,6 @@ class MapViewer {
       // try to fetch data, if nothing was found (404), use the latest data
       const dayData: any = await fetchDateData(this.currentDateKey);
       // replace missing data with the previious loaded data
-      if (dayData === null) {
-        this.latestData = dayData;
-      }
       if (dayData.areas.length === 0) {
         dayData.areas = this.latestData && 'areas' in this.latestData ? this.latestData.areas : [];
       }
