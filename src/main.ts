@@ -1007,9 +1007,9 @@ class MapViewer {
       if (dayData.areas.length === 0) {
         dayData.areas = this.latestData && 'areas' in this.latestData ? this.latestData.areas : [];
       }
-      if (dayData.areas_ua.length === 0) {
-        dayData.areas_ua = this.latestData && 'areas_ua' in this.latestData ? this.latestData.areas_ua : [];
-      }
+
+      dayData.areas_ua = [];
+
       if (dayData.frontline.length === 0) {
         dayData.frontline = this.latestData && 'frontline' in this.latestData ? this.latestData.frontline : [];
       }            
