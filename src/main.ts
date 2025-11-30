@@ -1011,22 +1011,22 @@ class MapViewer {
         dayData.areas = this.latestData.areas || [];
       }
       if (dayData.areas_ua.length === 0) {
-        dayData.areas_ua = this.latestData.areas_ua || [];
+        dayData.areas_ua = 'areas_ua' in this.latestData ? this.latestData.areas_ua : [];
       }
       if (dayData.frontline.length === 0) {
-        dayData.frontline = this.latestData.frontline || [];
+        dayData.frontline = 'frontline' in this.latestData ? this.latestData.frontline : [];
       }            
       if (dayData.unit_count.ru.length === 0) {
-        dayData.unit_count.ru = this.latestData.unit_count.ru || [];
+        dayData.unit_count.ru = 'unit_count' in this.latestData ? this.latestData.unit_count.ru : [];
       }
       if (dayData.unit_count.ua.length === 0) {
-        dayData.unit_count.ua = this.latestData.unit_count.ua || [];
+        dayData.unit_count.ua = 'unit_count' in this.latestData ? this.latestData.unit_count.ua : [];
       }
       if (dayData.units.ru.length === 0) {
-        dayData.units.ru = this.latestData.units.ru || [];
+        dayData.units.ru = 'units' in this.latestData ? this.latestData.units.ru : [];
       }
       if (dayData.units.ua.length === 0) {
-        dayData.units.ua = this.latestData.units.ua || [];
+        dayData.units.ua = 'units' in this.latestData ? this.latestData.units.ua : [];
       }
 
       this.cache.set(this.currentDateKey, this.latestData);
